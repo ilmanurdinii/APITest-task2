@@ -1,0 +1,54 @@
+const request_url = require("supertest")("https://restful-booker.herokuapp.com/");
+const assert = require("chai").expect;
+
+describe("Create User Functionality", function () {
+    
+    it("Login", async function () {
+
+    const response = await request_url
+        .post("auth/")
+        .send({username: "admin", password: "password123"})
+        .expect(200);
+    });
+    
+    
+    it("Get All Booking ID", async function () {
+
+    const response = await request_url
+        .get("booking/")
+        .send()
+        .expect(200);
+    });
+
+    it("Get single booking", async function () {
+
+    const response = await request_url
+        .get("booking/5")
+        .set({Accept:"application/json"})
+        .send()
+        .expect(200);
+    });
+
+    it("Create booking", async function () {
+
+    const response = await request_url
+        .post("booking/")
+        .set({Accept:"application/json"})
+        .send({
+            firstname : "Ilma",
+            lastname : "Nurdini",
+            totalprice : 566,
+            depositpaid : true,
+            bookingdates : {
+                checkin : "23-12-2022",
+                checkout : "24-12-2022"
+            },
+            additionalneeds : "info tambahan"
+        })
+        .expect(200);
+        assert(response.body.booking.firstname).to.eql("Ilma");
+        assert(response.body.booking.lastname).to.eql("Nurdini");
+    });
+
+
+});
